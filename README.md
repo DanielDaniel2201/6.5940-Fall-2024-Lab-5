@@ -12,30 +12,33 @@ In this lab, you will learn the following:
 * Observe the end-to-end latency improvement achieved by each technique.
 
 ## Evaluation results of this finished repo
+OS: wsl2
+CPU: AMD Ryzen 7 6800H with Radeon Graphics
+Threads: 64
 ```
 -------- Sanity check of reference implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-reference, 2504.263916, 250.425995, 10, 1.046791
+reference, 2595.684082, 259.567993, 10, 1.009923
 
 -------- Sanity check of loop_unrolling implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-loop_unrolling, 2021.270996, 202.126999, 10, 1.296927
+loop_unrolling, 2238.366943, 223.835999, 10, 1.171140
 
 -------- Sanity check of multithreading implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-multithreading, 705.130981, 70.513000, 10, 3.717664
+multithreading, 703.609985, 70.361000, 10, 3.725700
 
 -------- Sanity check of simd_programming implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-simd_programming, 1594.031006, 159.403000, 10, 1.644535
+simd_programming, 1596.302979, 159.630005, 10, 1.642194
 
 -------- Sanity check of multithreading_loop_unrolling implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-multithreading_loop_unrolling, 572.153015, 57.215000, 10, 4.581711
+multithreading_loop_unrolling, 594.624023, 59.462002, 10, 4.408567
 
 -------- Sanity check of all_techniques implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
-all_techniques, 199.865997, 19.986000, 10, 13.115987
+all_techniques, 130.085007, 13.008000, 10, 20.151746
 
 All tests completed!
 ```
