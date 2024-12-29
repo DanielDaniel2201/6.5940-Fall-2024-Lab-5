@@ -115,15 +115,20 @@ void MatmulOperator::mat_mul_simd_programming(struct matmul_params *params) {
                 */
                 // TODO: Unpack 64 4-bit (one __mm256i) weights into 64 8-bit (two __mm256i)
                 // (1) load 256 bit from w_strat with _mm256_loadu_si256
-                // (2) use `_mm256_and_si256` and lowMask to extract the lower half of wegihts
-                // (3) use `_mm256_srli_epi16` and `_mm256_and_si256` with lowMask to extract the upper half of weights
                 __m256i raw_w = _mm256_loadu_si256(w_start);
+                // (2) use `_mm256_and_si256` and lowMask to extract the lower half of wegihts
+                __m256i w_lower_half = _mm256_and_si256(lowMask, raw_w);
+                // (3) use `_mm256_srli_epi16` and `_mm256_and_si256` with lowMask to extract the upper half of weights
+                __m256i w_shifted = _mm256_srli_epi16(raw_w, 4);
+                __m256i w_higher_half = _mm256_and_si256(w_shifted, lowMask);
 
                 // TODO: apply zero_point to weights and convert the range from (0, 15) to (-8, 7)
                 // Hint: using `_mm256_sub_epi8` to the lower-half and upper-half vectors of weights
                 // Note: Store the lower half and upper half of weights into `w_0` and `w_128`, respectively
                 const __m256i zero_point = _mm256_set1_epi8(8);
                 __m256i w_0, w_128;
+                w_0 = _mm256_sub_epi8(w_lower_half, zero_point);
+                w_128 = _mm256_sub_epi8(w_higher_half, zero_point);
 
                 // Perform int8 dot product with _mm256_maddubs_epi16
                 /* Syntax of _mm256_maddubs_epi16:
@@ -152,6 +157,8 @@ void MatmulOperator::mat_mul_simd_programming(struct matmul_params *params) {
                 // Hint: use `_mm256_maddubs_epi16` to complete the following computation
                 // dot = ax * sy
                 // dot2 = ax2 * sy2
+                dot = _mm256_maddubs_epi16(ax, sy);
+                dot2 = _mm256_maddubs_epi16(ax2, sy2);
 
                 // Convert int32 vectors to floating point vectors
                 const __m256i ones = _mm256_set1_epi16(1);

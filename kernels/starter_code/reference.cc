@@ -21,15 +21,15 @@ void MatmulOperator::mat_mul_reference(struct matmul_params *params) {
     for (int row = 0; row < m; row++) {
         for (int col = 0; col < n; col++) {
             float acc = 0;
-            // Compute each block
+            // Compute each block (block-wise, not element-wise)
             for (int ch = 0; ch < k;) {
-                // pointer of the int4 weights
+                // pointer of the int4 weights (int4_data_ptr, but type of uint8_t pointer, thus "/ 2")
                 uint8_t *w_int4 = &B->int4_data_ptr[(col * k + ch) / 2];
-                // pointer of the int8 activation
+                // pointer of the int8 activation (the activations are of type int8, no need for "/ 2")
                 const signed char *a_int8 = &A->int8_data_ptr[row * k + ch];
-                // scale of weight
+                // scale of weight, per-block
                 float s_w = params->scales[(col * k + ch) / block_size];
-                // scale of activation
+                // scale of activation, per-block
                 float s_a = params->A_scales[(row * k + ch) / block_size];
 #ifdef QM_ARM
                 // order of weights with QM_ARM:
@@ -73,6 +73,7 @@ void MatmulOperator::mat_mul_reference(struct matmul_params *params) {
                 // process 32 bytes of weigths (256 bit) = 2 blocks
                 // intermediate variable to store sum of integer multiplication and accumulation
                 int intermediate_sum = 0, intermediate_sum_2nd = 0;
+                // compute inside a block
                 for (int qj = 0; qj < 32; qj++) {
                     // decode a packed byte into two int8 in the range of (-8, 7)
                     uint8_t packed_int4_0 = w_int4[qj];

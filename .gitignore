@@ -14,7 +14,7 @@
 .direnv/
 .envrc
 .swiftpm
-.venv
+venv/
 .vs/
 .vscode/
 
