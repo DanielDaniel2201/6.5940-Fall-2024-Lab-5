@@ -12,9 +12,9 @@ In this lab, you will learn the following:
 * Observe the end-to-end latency improvement achieved by each technique.
 
 ## Evaluation results of this finished repo
-OS: wsl2
-CPU: AMD Ryzen 7 6800H with Radeon Graphics
-Threads: 64
+- OS: wsl2
+- CPU: AMD Ryzen 7 6800H with Radeon Graphics
+- Threads: 64
 ```
 -------- Sanity check of reference implementation: Passed! -------- 
 Section, Total time(ms), Average time(ms), Count, GOPs
